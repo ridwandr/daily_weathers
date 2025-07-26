@@ -15,11 +15,11 @@ load_dotenv(dotenv_path="config/.env")
 logging.basicConfig(level=logging.INFO)
 
 @flow(name="OWM ETL Pipeline", log_prints=True)
-def run_pipeline(mode: str = "replace") -> None:
+def run_pipeline(mode: str = "append") -> None:
     """
     Prefect-deployable ETL flow for OpenWeatherMap data.
     """
-    logging.info("🚀 Starting Prefect ETL Pipeline...")
+    logging.info("Starting Prefect ETL Pipeline...")
 
     raw = fetch_weather_all_cities()
     if raw.empty:

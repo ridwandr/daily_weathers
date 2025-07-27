@@ -1,0 +1,8 @@
+pandas
+requests
+python-dotenv
+pandas-gbq
+google-auth
+prefect
+prefect-gcp
+pyarrow

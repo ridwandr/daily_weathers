@@ -1,12 +1,12 @@
 # transform.py
 
 import pandas as pd
-from pytz import timezone
+from pytz import timezone as tz
 import numpy as np
 import logging
 
 # Default: Waktu Jakarta (bisa disesuaikan)
-WIB = "Asia/Jakarta"
+WIB = tz("Asia/Jakarta")
 
 def clean_weather_data(df: pd.DataFrame) -> pd.DataFrame:
     """
@@ -25,19 +25,8 @@ def clean_weather_data(df: pd.DataFrame) -> pd.DataFrame:
 
     df = df.dropna(subset=["temperature", "humidity", "weather", "timestamp"])
 
-    df["timestamp"] = pd.to_datetime(df["timestamp"], errors="coerce")
-    if df["timestamp"].dt.tz is None:
-        df["timestamp"] = df["timestamp"].dt.tz_localize("UTC")
-    else:
-        df["timestamp"] = df["timestamp"].dt.tz_convert("UTC")
-
-    df["timestamp"] = df["timestamp"].dt.tz_convert(WIB)
-    
-    if "timestamp" in df.columns:
-        df["timestamp"] = pd.to_datetime(df["timestamp"], errors="coerce")
-        df["timestamp"] = df["timestamp"].dt.tz_convert(WIB)
-    else:
-        logging.warning("⚠️ Column 'timestamp' not found during transform.")
+    df["timestamp"] = pd.to_datetime(df["timestamp"]).dt.tz_localize("UTC").dt.tz_convert(WIB)
+    df["fetched_at"] = pd.to_datetime(df["fetched_at"]).dt.tz_localize("UTC").dt.tz_convert(WIB)
 
     return df
 

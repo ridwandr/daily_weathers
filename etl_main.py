@@ -12,9 +12,7 @@ from etl.load import upload_to_bigquery
 # Load environment variables
 load_dotenv()
 
-# Logging setup
-logging.basicConfig(level=logging.INFO)
-# === Logging Setup ===
+# Logging Setup
 log_dir = "logs"
 os.makedirs(log_dir, exist_ok=True)
 log_file = os.path.join(log_dir, f"etl_log_{datetime.now().strftime('%Y%m%d')}.log")
@@ -33,15 +31,16 @@ def run_pipeline(mode: str = "append") -> None:
     """
     Prefect-deployable ETL flow for OpenWeatherMap data.
     """
-    print("🔁 Running run_pipeline function...")
+    print("Running run_pipeline function...")
     
     logging.info(f"Starting ETL Pipeline - {datetime.now().strftime('%Y-%m-%d %H:%M:%S')} ")
     raw = fetch_weather_all_cities()
-    logging.info(f"📊 Extracted data shape: {raw.shape}")
+    logging.info(f"Extracted data shape: {raw.shape}")
 
     if raw.empty:
         logging.warning("No data fetched. Exiting.")
         return
+    
     logging.info(f"--Data Cleanup")
     cleaned = clean_weather_data(raw)
     logging.info(f"--Data Enrichment")
@@ -56,7 +55,7 @@ def run_pipeline(mode: str = "append") -> None:
 
     upload_to_bigquery(enriched, PROJECT_ID, TABLE_ID, if_exists=mode)
 
-    logging.info("✅ ETL Pipeline finished.")
+    logging.info("ETL Pipeline finished.")
 
 # Optional CLI run
 if __name__ == "__main__":

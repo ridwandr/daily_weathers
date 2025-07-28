@@ -19,7 +19,7 @@ def upload_to_bigquery(
     project_id: str = PROJECT_ID,
     table_id: str = TABLE_ID,
     credentials_path: str = CREDENTIALS_PATH,
-    if_exists: str = "replace"
+    if_exists: str = "append"
 ):
     """
     Unggah DataFrame ke Google BigQuery.

@@ -45,27 +45,69 @@ def fetch_weather_by_id(city_id: int) -> dict:
         return None
 
 def fetch_weather_all_cities(city_file: str = CITY_LIST_PATH) -> pd.DataFrame:
+    import os
+import pandas as pd
+import requests
+import logging
+
+def fetch_weather_all_cities():
+    logging.info("🌐 Starting weather data fetch...")
     
-    logging.info("🌐 Fetch function called.")
-    API_KEY = os.getenv("OWM_API_KEY")
-    logging.info(f"API KEY from env: {API_KEY}")
+    api_key = os.getenv("OWM_API_KEY")
+    if not api_key:
+        logging.warning("❌ OWM_API_KEY not found in environment!")
+        return pd.DataFrame()
 
-    path = "config/city_list.csv"
-    logging.info(f"Checking CSV path: {path}")
-    assert os.path.exists(path), f"{path} not found"
+    try:
+        cities = ["Jakarta", "Surabaya", "Bandung"]  # ⬅️ Sementara, ganti file CSV
+        records = []
 
-    df = pd.read_csv(path)
-    logging.info(f"Loaded {len(df)} cities")
+        for city in cities:
+            logging.info(f"Fetching weather for: {city}")
+            url = f"http://api.openweathermap.org/data/2.5/weather?q={city}&appid={api_key}&units=metric"
+            r = requests.get(url)
+            if r.status_code != 200:
+                logging.warning(f"Failed to fetch for {city}: {r.status_code}")
+                continue
 
-    cities_df = pd.read_csv(city_file)
-    records = []
-    for _, row in cities_df.iterrows():
-        result = fetch_weather_by_id(row["id"])
-        if result:
-            records.append(result)
-        else:
-            logging.warning(f"Skipping city ID {row['id']} ({row['name']})")
-    return pd.DataFrame(records)
+            data = r.json()
+            record = {
+                "city": city,
+                "temp": data["main"]["temp"],
+                "humidity": data["main"]["humidity"],
+                "weather": data["weather"][0]["description"],
+                "fetched_at": pd.Timestamp.utcnow()
+            }
+            records.append(record)
+
+        df = pd.DataFrame(records)
+        logging.info(f"✅ Fetched {len(df)} records.")
+        return df
+
+    except Exception as e:
+        logging.error(f"❌ Exception during fetch: {e}")
+        return pd.DataFrame()
+
+    # logging.info("🌐 Fetch function called.")
+    # API_KEY = os.getenv("OWM_API_KEY")
+    # logging.info(f"API KEY from env: {API_KEY}")
+
+    # path = "config/city_list.csv"
+    # logging.info(f"Checking CSV path: {path}")
+    # assert os.path.exists(path), f"{path} not found"
+
+    # df = pd.read_csv(path)
+    # logging.info(f"Loaded {len(df)} cities")
+
+    # cities_df = pd.read_csv(city_file)
+    # records = []
+    # for _, row in cities_df.iterrows():
+    #     result = fetch_weather_by_id(row["id"])
+    #     if result:
+    #         records.append(result)
+    #     else:
+    #         logging.warning(f"Skipping city ID {row['id']} ({row['name']})")
+    # return pd.DataFrame(records)
 
 
 if __name__ == "__main__":

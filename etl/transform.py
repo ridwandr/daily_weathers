@@ -3,9 +3,10 @@
 import pandas as pd
 from pytz import timezone
 import numpy as np
+import logging
 
 # Default: Waktu Jakarta (bisa disesuaikan)
-WIB = timezone("Asia/Jakarta")
+WIB = "Asia/Jakarta"
 
 def clean_weather_data(df: pd.DataFrame) -> pd.DataFrame:
     """
@@ -14,6 +15,11 @@ def clean_weather_data(df: pd.DataFrame) -> pd.DataFrame:
     - Drop null penting
     - Konversi timestamp ke timezone lokal
     """
+    expected_cols = ["temperature", "humidity", "weather", "timestamp"]
+    missing = [col for col in expected_cols if col not in df.columns]
+    if missing:
+        logging.error(f"Missing expected columns: {missing}")
+        return pd.DataFrame()
     if df.empty:
         return df
 

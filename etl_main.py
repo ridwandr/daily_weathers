@@ -4,6 +4,7 @@ import os
 import logging
 from dotenv import load_dotenv
 from prefect import flow
+from datetime import datetime
 from etl.extract import fetch_weather_all_cities
 from etl.transform import clean_weather_data, enrich_weather_data
 from etl.load import upload_to_bigquery
@@ -19,7 +20,7 @@ def run_pipeline(mode: str = "append") -> None:
     """
     Prefect-deployable ETL flow for OpenWeatherMap data.
     """
-    logging.info("Starting Prefect ETL Pipeline...")
+    logging.info(f"Starting ETL Pipeline - {datetime.now().strftime('%Y-%m-%d %H:%M:%S')} ")
 
     raw = fetch_weather_all_cities()
     if raw.empty:

@@ -54,7 +54,7 @@ def run_pipeline(mode: str = "append") -> None:
     PROJECT_ID = os.getenv("PROJECT_ID")
     TABLE_ID = os.getenv("TABLE_ID")
 
-    upload_to_bigquery(enriched, if_exists=mode)
+    upload_to_bigquery(enriched, PROJECT_ID, TABLE_ID, if_exists=mode)
 
     logging.info("✅ ETL Pipeline finished.")
 

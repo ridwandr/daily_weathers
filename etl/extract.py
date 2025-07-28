@@ -45,6 +45,18 @@ def fetch_weather_by_id(city_id: int) -> dict:
         return None
 
 def fetch_weather_all_cities(city_file: str = CITY_LIST_PATH) -> pd.DataFrame:
+    
+    logging.info("🌐 Fetch function called.")
+    API_KEY = os.getenv("OWM_API_KEY")
+    logging.info(f"API KEY from env: {API_KEY}")
+
+    path = "config/city_list.csv"
+    logging.info(f"Checking CSV path: {path}")
+    assert os.path.exists(path), f"{path} not found"
+
+    df = pd.read_csv(path)
+    logging.info(f"Loaded {len(df)} cities")
+
     cities_df = pd.read_csv(city_file)
     records = []
     for _, row in cities_df.iterrows():

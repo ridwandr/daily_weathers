@@ -35,13 +35,6 @@ def run_pipeline(mode: str = "append") -> None:
     """
     print("🔁 Running run_pipeline function...")
     
-    try:
-        from etl.extract import fetch_weather_all_cities
-        logging.info("✅ extract module import SUCCESS")
-    except Exception as e:
-        logging.error(f"❌ Failed to import extract module: {e}")
-        return
-    
     logging.info(f"Starting ETL Pipeline - {datetime.now().strftime('%Y-%m-%d %H:%M:%S')} ")
     raw = fetch_weather_all_cities()
     logging.info(f"📊 Extracted data shape: {raw.shape}")

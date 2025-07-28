@@ -36,13 +36,17 @@ def run_pipeline(mode: str = "append") -> None:
     if raw.empty:
         logging.warning("No data fetched. Exiting.")
         return
-
+    logging.info(f"--Data Cleanup")
     cleaned = clean_weather_data(raw)
+    logging.info(f"--Data Enrichment")
     enriched = enrich_weather_data(cleaned)
 
     if enriched.empty:
         logging.warning("No data after transform. Exiting.")
         return
+
+    PROJECT_ID = os.getenv("PROJECT_ID")
+    TABLE_ID = os.getenv("TABLE_ID")
 
     upload_to_bigquery(enriched, if_exists=mode)
 

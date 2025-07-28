@@ -73,10 +73,10 @@ def fetch_weather_all_cities():
             data = r.json()
             record = {
                 "city": city,
-                "temp": data["main"]["temp"],
+                "temperature": data["main"]["temp"],         # ✅ ganti dari temp → temperature
                 "humidity": data["main"]["humidity"],
                 "weather": data["weather"][0]["description"],
-                "fetched_at": pd.Timestamp.utcnow()
+                "timestamp": pd.Timestamp.utcnow()           # ✅ ganti dari fetched_at → timestamp
             }
             records.append(record)
 

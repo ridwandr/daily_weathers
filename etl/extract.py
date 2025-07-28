@@ -44,11 +44,11 @@ def fetch_weather_by_id(city_id: int) -> dict:
         logging.error(f"Error fetching city ID {city_id}: {e}")
         return None
 
-def fetch_weather_all_cities(city_file: str = CITY_LIST_PATH) -> pd.DataFrame:
-    import os
-import pandas as pd
-import requests
-import logging
+# def fetch_weather_all_cities(city_file: str = CITY_LIST_PATH) -> pd.DataFrame:
+#     import os
+# import pandas as pd
+# import requests
+# import logging
 
 def fetch_weather_all_cities():
     logging.info("🌐 Starting weather data fetch...")

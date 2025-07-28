@@ -32,7 +32,12 @@ def clean_weather_data(df: pd.DataFrame) -> pd.DataFrame:
         df["timestamp"] = df["timestamp"].dt.tz_convert("UTC")
 
     df["timestamp"] = df["timestamp"].dt.tz_convert(WIB)
-    df["fetched_at"] = pd.to_datetime(df["fetched_at"]).dt.tz_localize("UTC").dt.tz_convert(WIB)
+    
+    if "timestamp" in df.columns:
+        df["timestamp"] = pd.to_datetime(df["timestamp"], errors="coerce")
+        df["timestamp"] = df["timestamp"].dt.tz_convert(WIB)
+    else:
+        logging.warning("⚠️ Column 'timestamp' not found during transform.")
 
     return df
 

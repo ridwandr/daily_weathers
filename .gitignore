@@ -1,6 +1,8 @@
-# File konfigurasi dan kredensial 
-.env
-config
+# Abaikan semua file di config/
+config/*
+
+# Tapi tetap commit city_list.csv
+!config/city_list.csv
 
 # File log 
 logs/

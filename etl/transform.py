@@ -25,7 +25,13 @@ def clean_weather_data(df: pd.DataFrame) -> pd.DataFrame:
 
     df = df.dropna(subset=["temperature", "humidity", "weather", "timestamp"])
 
-    df["timestamp"] = pd.to_datetime(df["timestamp"]).dt.tz_localize("UTC").dt.tz_convert(WIB)
+    df["timestamp"] = pd.to_datetime(df["timestamp"], errors="coerce")
+    if df["timestamp"].dt.tz is None:
+        df["timestamp"] = df["timestamp"].dt.tz_localize("UTC")
+    else:
+        df["timestamp"] = df["timestamp"].dt.tz_convert("UTC")
+
+    df["timestamp"] = df["timestamp"].dt.tz_convert(WIB)
     df["fetched_at"] = pd.to_datetime(df["fetched_at"]).dt.tz_localize("UTC").dt.tz_convert(WIB)
 
     return df

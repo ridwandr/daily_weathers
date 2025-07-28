@@ -20,6 +20,7 @@ def run_pipeline(mode: str = "append") -> None:
     """
     Prefect-deployable ETL flow for OpenWeatherMap data.
     """
+    print("🔁 Running run_pipeline function...")
     logging.info(f"Starting ETL Pipeline - {datetime.now().strftime('%Y-%m-%d %H:%M:%S')} ")
 
     raw = fetch_weather_all_cities()
